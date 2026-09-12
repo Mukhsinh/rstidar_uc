@@ -170,9 +170,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="hidden bg-white md:block border-r border-slate-200/80 shadow-xs will-change-transform">
         <div className="flex h-full max-h-screen flex-col">
           {/* Brand Header Card */}
-          <div className="p-3.5 border-b border-slate-100">
-            <Link to="/dashboard" className="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-50 hover:bg-slate-100/90 border border-slate-200/70 shadow-2xs transition-all group">
-              <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-teal-50/80 border border-teal-200/60 p-1.5 shrink-0 overflow-hidden group-hover:scale-105 transition-transform">
+          <div className="p-4 border-b border-slate-100">
+            <Link to="/dashboard" className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 hover:bg-slate-100/90 border border-slate-200/70 shadow-2xs transition-all group">
+              <div className="flex items-center justify-center h-14 w-14 rounded-xl bg-teal-50/80 border border-teal-200/60 p-2 shrink-0 overflow-hidden group-hover:scale-105 transition-transform">
                 {logoUrl ? (
                   <img
                     src={logoUrl}
@@ -180,12 +180,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     className="h-full w-full object-contain"
                   />
                 ) : (
-                  <Building className="h-6 w-6 text-teal-600" />
+                  <Building className="h-8 w-8 text-teal-600" />
                 )}
               </div>
               <div className="flex flex-col overflow-hidden min-w-0">
-                <span className="text-base font-extrabold tracking-tight text-slate-900 truncate leading-snug">{appTitle}</span>
-                <span className="text-xs text-slate-500 truncate font-medium">{instansiName}</span>
+                <span className="text-lg font-extrabold tracking-tight text-slate-900 truncate leading-snug">{appTitle}</span>
+                <span className="text-sm text-slate-500 truncate font-medium">{instansiName}</span>
               </div>
             </Link>
           </div>
@@ -212,9 +212,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col bg-white">
-              <Link to="/dashboard" className="flex items-center gap-3 font-semibold text-lg text-slate-900">
-                <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-teal-50 border border-teal-100 p-1 shrink-0 overflow-hidden">
+            <SheetContent side="left" className="flex flex-col bg-white w-full max-w-[85vw] sm:max-w-sm px-4 py-6">
+              <Link to="/dashboard" className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100 font-semibold text-lg text-slate-900">
+                <div className="flex items-center justify-center h-14 w-14 rounded-xl bg-teal-50 border border-teal-100 p-2 shrink-0 overflow-hidden">
                   {logoUrl ? (
                     <img
                       src={logoUrl}
@@ -222,12 +222,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       className="h-full w-full object-contain"
                     />
                   ) : (
-                    <Building className="h-6 w-6 text-teal-600" />
+                    <Building className="h-8 w-8 text-teal-600" />
                   )}
                 </div>
-                <div className="flex flex-col overflow-hidden">
-                  <span className="font-bold text-lg text-slate-900 truncate">{appTitle}</span>
-                  <span className="text-xs text-slate-500 truncate">{instansiName}</span>
+                <div className="flex flex-col overflow-hidden min-w-0">
+                  <span className="font-bold text-lg text-slate-900 truncate leading-snug">{appTitle}</span>
+                  <span className="text-sm text-slate-500 truncate">{instansiName}</span>
                 </div>
               </Link>
               <nav className="grid gap-2 text-lg font-medium mt-4">
@@ -246,13 +246,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </div>
             </SheetContent>
           </Sheet>
-          <Link to="/dashboard" className="flex items-center gap-2 font-semibold text-lg text-slate-900">
-            <span className="font-bold">{appTitle}</span>
+          <Link to="/dashboard" className="flex-1 flex items-center gap-2 font-semibold text-lg text-slate-900 min-w-0">
+            <span className="font-bold truncate">{appTitle}</span>
           </Link>
           <Button
             variant="ghost"
             size="icon"
-            className="ml-auto text-slate-700 hover:bg-slate-100"
+            className="ml-auto shrink-0 text-slate-700 hover:bg-slate-100"
             onClick={handleLogout}
             disabled={loading}
           >

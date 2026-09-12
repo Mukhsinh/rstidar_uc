@@ -38,10 +38,10 @@ const RekapitulasiUnitCost: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(true);
-  
+
   const [unitKerjaList, setUnitKerjaList] = useState<string[]>([]);
   const [operatorList, setOperatorList] = useState<string[]>([]);
-  
+
   const currentYear = (parseInt(localStorage.getItem('activeYear') || new Date().getFullYear().toString()));
   const [filters, setFilters] = useState<FilterState>({
     unit_kerja: "",
@@ -122,27 +122,8 @@ const RekapitulasiUnitCost: React.FC = () => {
         setUnitKerjaList(uniqueUnitKerja.sort());
       }
 
-      // Fetch semua operator yang tersedia untuk tahun tertentu (tanpa limit)
-      const { data: operatorData, error: operatorError } = await tenantSupabase
-        .from("view_rekapitulasi_unit_cost")
-        .select("kode_operator, nama_operator")
-        .eq("tahun", tahunTarget)
-        .not("kode_operator", "is", null)
-        .not("nama_operator", "is", null)
-        .order("kode_operator", { ascending: true });
-
-      if (operatorError) {
-        console.error("Error fetching operator options:", operatorError);
-      } else {
-        const uniqueOperators = [
-          ...new Set(
-            (operatorData || [])
-              .filter((d) => d.kode_operator !== null && d.nama_operator !== null)
-              .map((d) => `${d.kode_operator} - ${d.nama_operator}`)
-          ),
-        ];
-        setOperatorList(uniqueOperators.sort());
-      }
+      // Fetch operator dihapus karena kolom kode_operator/nama_operator tidak dibackup view di DB
+      setOperatorList([]);
     } catch (err: any) {
       console.error("Error fetching filter options:", err);
     }
@@ -154,7 +135,7 @@ const RekapitulasiUnitCost: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Fetch semua data dengan pagination (Supabase default limit adalah 1000)
       let allData: any[] = [];
       let from = 0;
@@ -165,7 +146,7 @@ const RekapitulasiUnitCost: React.FC = () => {
         const { data: rekapData, error: rekapError } = await tenantSupabase
           .from("view_rekapitulasi_unit_cost")
           .select(
-            "id, tahun, kode_jenis, kode_unit_kerja, nama_unit_kerja, kode_operator, nama_operator, kode_tindakan, nama_tindakan, biaya_bahan, unit_cost_per_tindakan, sumber_tabel, jumlah, waktu_pemeriksaan, created_at, updated_at"
+            "id, tahun, kode_jenis, kode_unit_kerja, nama_unit_kerja, kode_tindakan, nama_tindakan, biaya_bahan, unit_cost_per_tindakan, sumber_tabel, created_at, updated_at"
           )
           .eq("tahun", tahunTarget)
           .order("kode_unit_kerja", { ascending: true })
@@ -285,7 +266,7 @@ const RekapitulasiUnitCost: React.FC = () => {
     // Filter by unit kerja (case-insensitive dan trim whitespace)
     if (filters.unit_kerja) {
       const unitKerjaFilter = filters.unit_kerja.trim();
-      filtered = filtered.filter((d) => 
+      filtered = filtered.filter((d) =>
         d.nama_unit_kerja && d.nama_unit_kerja.trim() === unitKerjaFilter
       );
     }
@@ -294,7 +275,7 @@ const RekapitulasiUnitCost: React.FC = () => {
     if (filters.operator) {
       const [kodeOp] = filters.operator.split(" - ");
       const kodeOpTrimmed = kodeOp.trim();
-      filtered = filtered.filter((d) => 
+      filtered = filtered.filter((d) =>
         d.kode_operator && d.kode_operator.trim() === kodeOpTrimmed
       );
     }
@@ -336,7 +317,7 @@ const RekapitulasiUnitCost: React.FC = () => {
 
     try {
       setRefreshingData(true);
-      
+
       toast({
         title: "Memperbarui data...",
         description: "Sedang menyinkronkan data dari tabel sumber",
@@ -612,21 +593,7 @@ const RekapitulasiUnitCost: React.FC = () => {
               </select>
             </div>
 
-            <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">Operator</label>
-              <select
-                value={filters.operator}
-                onChange={(e) => handleFilterChange("operator", e.target.value)}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
-              >
-                <option value="">Semua Operator</option>
-                {operatorList.map((op) => (
-                  <option key={op} value={op}>
-                    {op}
-                  </option>
-                ))}
-              </select>
-            </div>
+
 
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">Cari Tindakan</label>
@@ -858,12 +825,11 @@ const RekapitulasiUnitCost: React.FC = () => {
                       {index + 1}
                     </td>
                     <td className="px-2 py-2 whitespace-nowrap">
-                      <span className={`px-2 py-1 text-xs font-semibold rounded ${
-                        row.kode_jenis === 1 ? "bg-sky-500 text-white" :
+                      <span className={`px-2 py-1 text-xs font-semibold rounded ${row.kode_jenis === 1 ? "bg-sky-500 text-white" :
                         row.kode_jenis === 2 ? "bg-emerald-500 text-white" :
-                        row.kode_jenis === 3 ? "bg-violet-500 text-white" :
-                        "bg-gray-400 text-white"
-                      }`}>
+                          row.kode_jenis === 3 ? "bg-violet-500 text-white" :
+                            "bg-gray-400 text-white"
+                        }`}>
                         {getJenisLabel(row.kode_jenis)}
                       </span>
                     </td>
@@ -917,8 +883,8 @@ const RekapitulasiUnitCost: React.FC = () => {
       {/* Footer Info */}
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <p className="text-sm text-blue-800">
-          <strong>ℹ️ Informasi:</strong> Data ini merupakan rekapitulasi dari 7 tabel kalkulasi biaya 
-          (Laboratorium, Radiologi, BDRS, Tindakan Rawat Jalan, Tindakan Rawat Inap, Tindakan Operatif, dan Cathlab). 
+          <strong>ℹ️ Informasi:</strong> Data ini merupakan rekapitulasi dari 7 tabel kalkulasi biaya
+          (Laboratorium, Radiologi, BDRS, Tindakan Rawat Jalan, Tindakan Rawat Inap, Tindakan Operatif, dan Cathlab).
           Data akan otomatis ter-update ketika tabel sumber berubah melalui sistem trigger.
         </p>
       </div>

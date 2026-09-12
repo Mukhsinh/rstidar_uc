@@ -1,13 +1,14 @@
 import { useState, useCallback } from "react";
-import { 
-  showSuccess, 
-  showError, 
-  showLoading, 
+import {
+  showSuccess,
+  showError,
+  showLoading,
   showInfo,
   NotificationMessages,
   dismissToast,
-  type NotificationOptions 
+  type NotificationOptions
 } from "@/utils/notifications";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface UseFormOperationsOptions {
   entityName: string;
@@ -21,6 +22,7 @@ export const useFormOperations = (options: UseFormOperationsOptions) => {
   const [deleting, setDeleting] = useState(false);
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const { canDelete } = usePermissions();
 
   const executeOperation = useCallback(async <T>(
     operation: () => Promise<T>,
@@ -123,8 +125,12 @@ export const useFormOperations = (options: UseFormOperationsOptions) => {
   }, [executeOperation]);
 
   const deleteData = useCallback(<T>(operation: () => Promise<T>, customOptions?: any) => {
+    if (!canDelete()) {
+      showError("Maaf, role tingkat Manajer tidak diizinkan untuk menghapus data.");
+      return Promise.resolve(null);
+    }
     return executeOperation(operation, "delete", customOptions);
-  }, [executeOperation]);
+  }, [executeOperation, canDelete]);
 
   const importData = useCallback(<T>(operation: () => Promise<T>, customOptions?: any) => {
     return executeOperation(operation, "import", customOptions);
@@ -145,7 +151,7 @@ export const useFormOperations = (options: UseFormOperationsOptions) => {
     deleting,
     importing,
     exporting,
-    
+
     // Operation methods
     executeOperation,
     saveData,

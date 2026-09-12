@@ -140,12 +140,12 @@ const navItems: NavItem[] = [
     title: "Rekapitulasi Unit Cost",
     icon: BarChart3,
     href: "/rekapitulasi-unit-cost",
-    allowedRoles: ["Super Admin", "Admin", "Manajer Keuangan", "Manager", "Viewer"],
+    allowedRoles: ["Super Admin", "Admin", "Manajer Keuangan", "Manager", "Viewer", "Manajer Pelayanan", "Manajer Penunjang", "Manajer Keperawatan", "Manajer Aset SDM"],
   },
   {
     title: "Skenario Tarif",
     icon: FileText,
-    allowedRoles: ["Super Admin", "Admin", "Manajer Keuangan", "Manager", "Viewer"],
+    allowedRoles: ["Super Admin", "Admin", "Manajer Keuangan", "Manager", "Viewer", "Manajer Pelayanan", "Manajer Penunjang", "Manajer Keperawatan", "Manajer Aset SDM"],
     subItems: [
       { title: "Skenario Tarif Tindakan", href: "/skenario-tarif-tindakan", icon: FileText },
       { title: "Skenario Tarif Akomodasi", href: "/skenario-tarif-akomodasi", icon: Bed },
@@ -217,7 +217,7 @@ const navItems: NavItem[] = [
     title: "Audit Trail",
     icon: FileText,
     href: "/audit-trail",
-    allowedRoles: ["Super Admin"],
+    allowedRoles: ["Super Admin", "Admin"],
   },
 ];
 

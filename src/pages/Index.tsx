@@ -71,6 +71,73 @@ const formatIDRShort = (val: number) => {
 
 const pieColors = ["#10b981", "#0284c7", "#f59e0b", "#8b5cf6", "#ec4899"];
 
+const quickAccessLinks = [
+  {
+    id: "rekap",
+    to: "/rekapitulasi-unit-cost",
+    title: "Rekapitulasi Unit Cost",
+    desc: "Laporan komprehensif unit cost",
+    Icon: BarChart3,
+    styles: { border: "hover:border-emerald-500/60", bg: "bg-emerald-50", text: "text-emerald-600", groupBg: "group-hover:bg-emerald-600", groupText: "group-hover:text-emerald-700", arrow: "group-hover:text-emerald-600" }
+  },
+  {
+    id: "tarif_tindakan",
+    to: "/skenario-tarif-tindakan",
+    title: "Skenario Tarif Tindakan",
+    desc: "Simulasi penetapan tarif layanan",
+    Icon: Scissors,
+    styles: { border: "hover:border-teal-500/60", bg: "bg-teal-50", text: "text-teal-600", groupBg: "group-hover:bg-teal-600", groupText: "group-hover:text-teal-700", arrow: "group-hover:text-teal-600" }
+  },
+  {
+    id: "tarif_akomodasi",
+    to: "/skenario-tarif-akomodasi",
+    title: "Skenario Tarif Akomodasi",
+    desc: "Calculated tarif kelas rawat inap",
+    Icon: Bed,
+    styles: { border: "hover:border-blue-500/60", bg: "bg-blue-50", text: "text-blue-600", groupBg: "group-hover:bg-blue-600", groupText: "group-hover:text-blue-700", arrow: "group-hover:text-blue-600" }
+  },
+  {
+    id: "tarif_visit",
+    to: "/skenario-tarif-visit",
+    title: "Tarif Visit & Konsultasi",
+    desc: "Simulasi jasa dokter & visitasi",
+    Icon: Stethoscope,
+    styles: { border: "hover:border-indigo-500/60", bg: "bg-indigo-50", text: "text-indigo-600", groupBg: "group-hover:bg-indigo-600", groupText: "group-hover:text-indigo-700", arrow: "group-hover:text-indigo-600" }
+  },
+  {
+    id: "distribusi",
+    to: "/distribusi-biaya-rekap",
+    title: "Distribusi Biaya Rekap",
+    desc: "Double Distribution ABC Costing",
+    Icon: TrendingUp,
+    styles: { border: "hover:border-purple-500/60", bg: "bg-purple-50", text: "text-purple-600", groupBg: "group-hover:bg-purple-600", groupText: "group-hover:text-purple-700", arrow: "group-hover:text-purple-600" }
+  },
+  {
+    id: "budgeting",
+    to: "/budgeting-bhp/rupiah",
+    title: "Budgeting BHP (Rupiah)",
+    desc: "Anggaran bahan habis pakai",
+    Icon: CreditCard,
+    styles: { border: "hover:border-amber-500/60", bg: "bg-amber-50", text: "text-amber-600", groupBg: "group-hover:bg-amber-600", groupText: "group-hover:text-amber-700", arrow: "group-hover:text-amber-600" }
+  },
+  {
+    id: "cost_recovery",
+    to: "/cost-recovery",
+    title: "Cost Recovery Analysis",
+    desc: "Analisis margin & profitabilitas",
+    Icon: PieChartIcon,
+    styles: { border: "hover:border-cyan-500/60", bg: "bg-cyan-50", text: "text-cyan-600", groupBg: "group-hover:bg-cyan-600", groupText: "group-hover:text-cyan-700", arrow: "group-hover:text-cyan-600" }
+  },
+  {
+    id: "master_unit",
+    to: "/data-master/unit-kerja",
+    title: "Data Master Unit Kerja",
+    desc: "Kelola struktur unit RS",
+    Icon: Building,
+    styles: { border: "hover:border-rose-500/60", bg: "bg-rose-50", text: "text-rose-600", groupBg: "group-hover:bg-rose-600", groupText: "group-hover:text-rose-700", arrow: "group-hover:text-rose-600" }
+  }
+];
+
 const Index = () => {
   const { settings: generalSettings } = useGeneralSettingsContext();
   const { tenant } = useTenant();
@@ -241,8 +308,8 @@ const Index = () => {
 
   return (
     <div className="flex flex-col gap-6 pb-12 w-full">
-      {/* 1. Fresh Light Emerald Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 p-6 md:p-8 text-white shadow-xl border border-emerald-300/40">
+      {/* 1. Dashboard Header Banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-emerald-600 p-6 md:p-8 text-white shadow-xl border border-emerald-500/40">
         <div className="absolute top-0 right-0 -mt-10 -mr-10 h-64 w-64 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-1/3 h-48 w-48 rounded-full bg-teal-300/20 blur-xl pointer-events-none"></div>
 
@@ -255,22 +322,19 @@ const Index = () => {
               <span>Periode Tahun {selectedYear}</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow-xs">
-              Dashboard Eksekutif Unit Cost & Cost Recovery
+              Dashboard Unit Cost & Cost Recovery
             </h1>
-            <p className="text-emerald-50 text-xs md:text-sm font-medium leading-relaxed max-w-xl">
-              Ringkasan integratif kalkulasi biaya langsung, biaya tidak langsung, dan kinerja keuangan real-time dari database.
-            </p>
           </div>
 
           <div className="flex items-center gap-3 self-stretch md:self-auto shrink-0">
             <Button
               variant="outline"
-              size="sm"
+              size="icon"
               onClick={handleRefresh}
-              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-md text-xs font-semibold h-10 px-4 rounded-xl shadow-xs"
+              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-md h-10 w-10 flex flex-col items-center justify-center rounded-xl shadow-xs"
+              title="Refresh Data"
             >
-              <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
-              Refresh Data DB
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
             </Button>
             <Link to="/rekapitulasi-unit-cost">
               <Button size="sm" className="bg-white text-emerald-800 hover:bg-emerald-50 font-bold h-10 px-5 rounded-xl shadow-md text-xs border border-white/50">
@@ -286,9 +350,8 @@ const Index = () => {
       <Card className="border-slate-200/80 shadow-xs bg-white rounded-2xl">
         <CardContent className="p-4 md:p-5">
           <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-slate-800 font-bold text-sm shrink-0">
+            <div className="flex items-center justify-center h-9 w-9 bg-emerald-50 rounded-xl shrink-0">
               <Filter className="h-4 w-4 text-emerald-600" />
-              <span>Filter Data Database</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1">
@@ -645,133 +708,22 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: Rekapitulasi Unit Cost */}
-          <Link to="/rekapitulasi-unit-cost" className="group">
-            <Card className="h-full border-slate-200/80 hover:border-emerald-500/60 shadow-xs hover:shadow-md transition-all rounded-2xl bg-white p-4 group-hover:-translate-y-0.5">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                  <BarChart3 className="h-6 w-6" />
+          {quickAccessLinks.map((link) => (
+            <Link key={link.id} to={link.to} className="group">
+              <Card className={`h-full border-slate-200/80 ${link.styles.border} shadow-xs hover:shadow-md transition-all rounded-2xl bg-white p-4 group-hover:-translate-y-0.5`}>
+                <div className="flex items-center gap-3">
+                  <div className={`p-3 rounded-xl ${link.styles.bg} ${link.styles.text} ${link.styles.groupBg} group-hover:text-white transition-colors`}>
+                    <link.Icon className="h-6 w-6" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className={`text-sm font-bold text-slate-900 ${link.styles.groupText} truncate`}>{link.title}</h3>
+                    <p className="text-[11px] text-slate-500 truncate">{link.desc}</p>
+                  </div>
+                  <ChevronRight className={`h-4 w-4 text-slate-400 ${link.styles.arrow} transition-colors`} />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-emerald-700 truncate">Rekapitulasi Unit Cost</h3>
-                  <p className="text-[11px] text-slate-500 truncate">Laporan komprehensif unit cost</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-emerald-600 transition-colors" />
-              </div>
-            </Card>
-          </Link>
-
-          {/* Card 2: Skenario Tarif Tindakan */}
-          <Link to="/skenario-tarif-tindakan" className="group">
-            <Card className="h-full border-slate-200/80 hover:border-teal-500/60 shadow-xs hover:shadow-md transition-all rounded-2xl bg-white p-4 group-hover:-translate-y-0.5">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-teal-50 text-teal-600 group-hover:bg-teal-600 group-hover:text-white transition-colors">
-                  <Scissors className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-teal-700 truncate">Skenario Tarif Tindakan</h3>
-                  <p className="text-[11px] text-slate-500 truncate">Simulasi penetapan tarif layanan</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-teal-600 transition-colors" />
-              </div>
-            </Card>
-          </Link>
-
-          {/* Card 3: Skenario Tarif Akomodasi */}
-          <Link to="/skenario-tarif-akomodasi" className="group">
-            <Card className="h-full border-slate-200/80 hover:border-blue-500/60 shadow-xs hover:shadow-md transition-all rounded-2xl bg-white p-4 group-hover:-translate-y-0.5">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                  <Bed className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-700 truncate">Skenario Tarif Akomodasi</h3>
-                  <p className="text-[11px] text-slate-500 truncate">Calculated tarif kelas rawat inap</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
-              </div>
-            </Card>
-          </Link>
-
-          {/* Card 4: Skenario Tarif Visit & Konsultasi */}
-          <Link to="/skenario-tarif-visit" className="group">
-            <Card className="h-full border-slate-200/80 hover:border-indigo-500/60 shadow-xs hover:shadow-md transition-all rounded-2xl bg-white p-4 group-hover:-translate-y-0.5">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                  <Stethoscope className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-700 truncate">Tarif Visit & Konsultasi</h3>
-                  <p className="text-[11px] text-slate-500 truncate">Simulasi jasa dokter & visitasi</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-indigo-600 transition-colors" />
-              </div>
-            </Card>
-          </Link>
-
-          {/* Card 5: Distribusi Biaya */}
-          <Link to="/distribusi-biaya-rekap" className="group">
-            <Card className="h-full border-slate-200/80 hover:border-purple-500/60 shadow-xs hover:shadow-md transition-all rounded-2xl bg-white p-4 group-hover:-translate-y-0.5">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                  <TrendingUp className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-purple-700 truncate">Distribusi Biaya Rekap</h3>
-                  <p className="text-[11px] text-slate-500 truncate">Double Distribution ABC Costing</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-purple-600 transition-colors" />
-              </div>
-            </Card>
-          </Link>
-
-          {/* Card 6: Budgeting BHP */}
-          <Link to="/budgeting-bhp/rupiah" className="group">
-            <Card className="h-full border-slate-200/80 hover:border-amber-500/60 shadow-xs hover:shadow-md transition-all rounded-2xl bg-white p-4 group-hover:-translate-y-0.5">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-amber-50 text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                  <CreditCard className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-amber-700 truncate">Budgeting BHP (Rupiah)</h3>
-                  <p className="text-[11px] text-slate-500 truncate">Anggaran bahan habis pakai</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-amber-600 transition-colors" />
-              </div>
-            </Card>
-          </Link>
-
-          {/* Card 7: Cost Recovery Analysis */}
-          <Link to="/cost-recovery" className="group">
-            <Card className="h-full border-slate-200/80 hover:border-cyan-500/60 shadow-xs hover:shadow-md transition-all rounded-2xl bg-white p-4 group-hover:-translate-y-0.5">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-cyan-50 text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white transition-colors">
-                  <PieChartIcon className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-cyan-700 truncate">Cost Recovery Analysis</h3>
-                  <p className="text-[11px] text-slate-500 truncate">Analisis margin & profitabilitas</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-cyan-600 transition-colors" />
-              </div>
-            </Card>
-          </Link>
-
-          {/* Card 8: Data Master Unit Kerja */}
-          <Link to="/data-master/unit-kerja" className="group">
-            <Card className="h-full border-slate-200/80 hover:border-rose-500/60 shadow-xs hover:shadow-md transition-all rounded-2xl bg-white p-4 group-hover:-translate-y-0.5">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-rose-50 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors">
-                  <Building className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-rose-700 truncate">Data Master Unit Kerja</h3>
-                  <p className="text-[11px] text-slate-500 truncate">Kelola struktur unit RS</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-rose-600 transition-colors" />
-              </div>
-            </Card>
-          </Link>
+              </Card>
+            </Link>
+          ))}
         </div>
       </div>
     </div>

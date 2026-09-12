@@ -32,7 +32,7 @@ export const usePermissions = () => {
 
       // Cek jika superadmin (superadmin bisa akses semua tanpa isolasi tenant)
       const { data: isSuperadmin } = await supabase.rpc('is_superadmin', { check_user_id: userId });
-      
+
       if (isSuperadmin) {
         // Super Admin - bisa akses semua
         // Untuk super admin, kita masih perlu mengambil role, tapi tanpa filter tenant
@@ -149,11 +149,11 @@ export const usePermissions = () => {
 
   const hasPermission = (permissionName: string): boolean => {
     if (!userRole) return false;
-    
+
     const permission = userRole.permissions.find(
       p => p.permission_name === permissionName && p.is_granted
     );
-    
+
     return !!permission;
   };
 
@@ -170,6 +170,9 @@ export const usePermissions = () => {
   };
 
   const canDelete = (): boolean => {
+    if (userRole?.role_name?.toLowerCase().includes('manajer') || userRole?.role_name?.toLowerCase().includes('manager')) {
+      return false;
+    }
     return hasPermission('hapus_data');
   };
 
