@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    /* White */
+    --foreground: 222.2 47.4% 11.2%;
+    /* Dark Blue/Black for text */
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 0 72% 51%;
+    /* Professional Red */
+    --primary-foreground: 0 0% 100%;
+    /* White text on red */
+
+    --secondary: 210 40% 96.1%;
+    /* Light Gray */
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    /* Light Gray */
+    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Medium Gray */
+
+    --accent: 210 40% 96.1%;
+    /* Light Gray */
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    /* Default destructive red */
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    /* Light Gray border */
+    --input: 214.3 31.8% 91.4%;
+    --ring: 0 72% 51%;
+    /* Red ring for focus */
+
+    --radius: 0.5rem;
+
+    /* Sidebar specific colors (teal theme) */
+    --sidebar-background: 180 100% 28%;
+    /* Teal sidebar background (darker) */
+    --sidebar-foreground: 0 0% 100%;
+    /* White text for sidebar */
+    --sidebar-primary: 180 100% 28%;
+    /* Teal for active/hover items */
+    --sidebar-primary-foreground: 0 0% 100%;
+    /* White text on active teal */
+    --sidebar-accent: 180 100% 20%;
+    /* Darker teal for hover background */
+    --sidebar-accent-foreground: 0 0% 100%;
+    /* White text on hover */
+    --sidebar-border: 180 100% 20%;
+    /* Teal border */
+    --sidebar-ring: 180 100% 28%;
+    /* Teal ring */
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    /* Dark background */
+    --foreground: 210 40% 98%;
+    /* Light text */
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 0 72% 51%;
+    /* Professional Red */
+    --primary-foreground: 210 40% 98%;
+    /* Light text on red */
+
+    --secondary: 217.2 32.6% 17.5%;
+    /* Darker gray */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 0 72% 51%;
+    /* Red ring */
+
+    /* Sidebar specific colors (teal theme for dark mode) */
+    --sidebar-background: 180 100% 28%;
+    /* Teal sidebar background (darker) */
+    --sidebar-foreground: 0 0% 100%;
+    /* White text for sidebar */
+    --sidebar-primary: 180 100% 28%;
+    /* Teal for active/hover items */
+    --sidebar-primary-foreground: 0 0% 100%;
+    /* White text on active teal */
+    --sidebar-accent: 180 100% 20%;
+    /* Darker teal for hover background */
+    --sidebar-accent-foreground: 0 0% 100%;
+    /* White text on hover */
+    --sidebar-border: 180 100% 20%;
+    /* Teal border */
+    --sidebar-ring: 180 100% 28%;
+    /* Teal ring */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  /* Persist background to avoid white flash during route transitions */
+  body {
+    @apply min-h-screen bg-slate-100 text-foreground;
+    background-attachment: fixed;
+  }
+
+  #root {
+    @apply min-h-screen bg-transparent;
+  }
+}
+
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  50% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@layer utilities {
+  .animate-loading-bar {
+    animation: loading-bar 1.2s ease-in-out infinite;
+  }
+
+  /* Ultra-Thin Custom Scrollbar for Sidebar and Containers */
+  .custom-thin-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .custom-thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-thin-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 9999px;
+  }
+
+  .custom-thin-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.6);
+  }
+}
