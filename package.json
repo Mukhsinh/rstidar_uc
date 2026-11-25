@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "node server.js",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build:dev": "vite build --mode development",
-    "preview": "vite preview",
+    "preview": "vite preview --port 3007 --host 0.0.0.0",
     "vercel-build": "npm run build",
     "db:setup": "node scripts/migrate-database.js",
     "db:backup": "node scripts/migrate-database.js --backup-only",

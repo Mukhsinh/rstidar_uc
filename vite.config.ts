@@ -5,8 +5,13 @@ import path from "path";
 export default defineConfig(() => ({
   base: "/",
   server: {
-    host: "::",
-    port: 8080,
+    host: "0.0.0.0",
+    port: 3007,
+  },
+  preview: {
+    host: "0.0.0.0",
+    port: 3007,
+    strictPort: true,
   },
   plugins: [react()],
   resolve: {
