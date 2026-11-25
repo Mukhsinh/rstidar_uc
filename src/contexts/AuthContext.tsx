@@ -55,48 +55,67 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setInitializing(true);
       setError(null);
 
-      const {
-        data: { session: initialSession },
-        error: sessionError,
-      } = await authService.getSession();
+      // Safety timeout to ensure app never hangs on loading screen indefinitely
+      const safetyTimer = setTimeout(() => {
+        if (isMounted) {
+          console.warn('⚠️ Auth bootstrap safety timeout triggered - completing initialization');
+          setInitializing(false);
+          setLoading(false);
+          isProcessingAuth = false;
+        }
+      }, 3000);
 
-      if (!isMounted) {
-        isProcessingAuth = false;
-        return;
-      }
+      try {
+        const {
+          data: { session: initialSession },
+          error: sessionError,
+        } = await authService.getSession();
 
-      if (sessionError) {
-        console.error('AuthContext bootstrap error:', sessionError);
-
-        const is429Error = sessionError.message?.includes('429') ||
-          sessionError.message?.toLowerCase().includes('too many requests') ||
-          sessionError.message?.toLowerCase().includes('rate limit');
-
-        if (is429Error && retryCount < 3) {
-          const backoffTime = Math.min(5000 * Math.pow(2, retryCount), 30000);
-          console.warn(`⚠️ Rate limit error detected. Retrying in ${backoffTime}ms (attempt ${retryCount + 1}/3)`);
-          setError(`Terlalu banyak permintaan. Mencoba ulang dalam ${Math.round(backoffTime / 1000)} detik...`);
-
-          retryTimeout = setTimeout(() => {
-            if (isMounted) {
-              isProcessingAuth = false;
-              bootstrap(retryCount + 1);
-            }
-          }, backoffTime);
+        if (!isMounted) {
           return;
         }
 
-        if (is429Error) {
-          setError('Server sedang sibuk. Silakan muat ulang halaman dalam beberapa saat.');
+        if (sessionError) {
+          console.error('AuthContext bootstrap error:', sessionError);
+
+          const is429Error = sessionError.message?.includes('429') ||
+            sessionError.message?.toLowerCase().includes('too many requests') ||
+            sessionError.message?.toLowerCase().includes('rate limit');
+
+          if (is429Error && retryCount < 3) {
+            const backoffTime = Math.min(5000 * Math.pow(2, retryCount), 30000);
+            console.warn(`⚠️ Rate limit error detected. Retrying in ${backoffTime}ms (attempt ${retryCount + 1}/3)`);
+            setError(`Terlalu banyak permintaan. Mencoba ulang dalam ${Math.round(backoffTime / 1000)} detik...`);
+
+            retryTimeout = setTimeout(() => {
+              if (isMounted) {
+                isProcessingAuth = false;
+                bootstrap(retryCount + 1);
+              }
+            }, backoffTime);
+            return;
+          }
+
+          if (is429Error) {
+            setError('Server sedang sibuk. Silakan muat ulang halaman dalam beberapa saat.');
+          } else {
+            setError(sessionError.message ?? 'Gagal mengambil sesi');
+          }
+          handleAuthStateChange(null);
         } else {
-          setError(sessionError.message ?? 'Gagal mengambil sesi');
+          handleAuthStateChange(initialSession);
+        }
+      } catch (err: any) {
+        console.error('AuthContext bootstrap exception:', err);
+        handleAuthStateChange(null);
+      } finally {
+        clearTimeout(safetyTimer);
+        if (isMounted) {
+          setInitializing(false);
+          setLoading(false);
+          isProcessingAuth = false;
         }
       }
-
-      handleAuthStateChange(initialSession);
-      setInitializing(false);
-      setLoading(false);
-      isProcessingAuth = false;
     };
 
     bootstrap();
@@ -115,17 +134,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         handleAuthStateChange(nextSession);
         setError(null);
       } else if (event === 'SIGNED_OUT') {
-        console.log('Auth event: SIGNED_OUT, verifying session...');
-        // Check if session can be retrieved/recovered before clearing
-        try {
-          const { data: recovered } = await authService.getSession();
-          if (recovered?.session && isMounted) {
-            console.log('✅ Session recovered, ignoring transient SIGNED_OUT event');
-            handleAuthStateChange(recovered.session);
-            return;
-          }
-        } catch {
-          // Recovery failed, proceed to logout
+        console.log('Auth event: SIGNED_OUT');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('supabase-auth-token');
+          sessionStorage.removeItem('tenant_id');
+          sessionStorage.removeItem('tenant_name');
         }
         handleAuthStateChange(null);
         setError(null);

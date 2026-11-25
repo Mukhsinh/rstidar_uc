@@ -29,41 +29,23 @@ export const authService = {
     try {
       const result = await supabase.auth.getSession();
 
-      // If session retrieval fails, try to recover from localStorage
-      if (result.error && typeof window !== 'undefined') {
-        console.warn('Session retrieval failed, attempting recovery from localStorage');
-
-        // Try to get stored session
-        const storedSession = localStorage.getItem('supabase-auth-token');
-
-        if (storedSession) {
-          try {
-            const sessionData = JSON.parse(storedSession);
-
-            // Validate session data structure
-            if (sessionData && sessionData.access_token && sessionData.refresh_token) {
-              console.log('✅ Found stored session, attempting to refresh');
-
-              // Try to refresh the session
-              const { data, error } = await supabase.auth.setSession({
-                access_token: sessionData.access_token,
-                refresh_token: sessionData.refresh_token,
-              });
-
-              if (!error && data.session) {
-                console.log('✅ Session recovered successfully');
-                return { data, error: null };
-              }
-            }
-          } catch (parseError) {
-            console.error('Failed to parse stored session:', parseError);
-          }
+      // If session error occurs (e.g. invalid refresh token / 400), clean up stale storage
+      if (result.error) {
+        console.warn('Session retrieval failed or token expired:', result.error.message);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('supabase-auth-token');
+          sessionStorage.removeItem('tenant_id');
+          sessionStorage.removeItem('tenant_name');
         }
+        return { data: { session: null }, error: null };
       }
 
       return result;
     } catch (error) {
       console.error('Unexpected error in getSession:', error);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('supabase-auth-token');
+      }
       return {
         data: { session: null },
         error: error as AuthError
